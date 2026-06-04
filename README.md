@@ -1,59 +1,146 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# POS & Manajemen Inventaris Multi-Tenant (SaaS)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Point of Sale (POS) dan Manajemen Inventaris berskala Enterprise yang dibangun dengan arsitektur **Software as a Service (SaaS)** dan **Multi-Tenancy**. Proyek ini secara khusus dirancang untuk mendigitalisasi operasional berbagai jenis toko ritel maupun grosir, memungkinkan banyak entitas bisnis untuk beroperasi secara mandiri dan aman di bawah satu ekosistem aplikasi pusat.
 
-## About Laravel
+## 🚀 Latar Belakang & Tujuan Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Aplikasi ini diciptakan untuk memecahkan masalah pencatatan inventaris dan penjualan yang masih manual pada bisnis ritel dan pertokoan. Dengan pendekatan multi-tenant, penyedia layanan (Super Admin) dapat menyewakan aplikasi ini kepada banyak pemilik toko (Tenant). Setiap Tenant akan memiliki ruang kerja, data, dan konfigurasi yang terisolasi sepenuhnya.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur Unggulan
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Arsitektur Multi-Tenant yang Aman
+- **Isolasi Data Penuh**: Data setiap toko/tenant dipisahkan dengan aman menggunakan paket `stancl/tenancy`.
+- **Subdomain Routing**: Setiap tenant mendapatkan URL/subdomain unik (contoh: `toko-a.pos-saas.test`, `toko-b.pos-saas.test`).
+- **Central & Tenant Domains**: Pemisahan yang jelas antara logika aplikasi pusat (Landing Page / Area Manajemen Super Admin) dan aplikasi tenant (Dashboard POS & Inventaris).
 
-## Learning Laravel
+### 2. Manajemen Inventaris Toko
+- **Katalog Produk & Kategori**: Manajemen barang dagangan, pengkategorian produk, dan varian secara spesifik.
+- **Pelacakan Stok Terpusat**: Pemantauan akurat untuk stok masuk (restock) dan stok keluar (penjualan).
+- **Fleksibilitas Penambahan Data**: Form input yang dinamis dan aman dengan proteksi validasi.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 3. Modul Point of Sale (POS)
+- **Pemrosesan Transaksi**: Antarmuka kasir yang dioptimalkan untuk kecepatan.
+- **Dukungan Transaksi Fleksibel**: Dirancang untuk menangani transaksi ritel (eceran) maupun grosir dengan efisien.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Keamanan & Autentikasi
+- **Role-Based Access Control (RBAC)**: Pembatasan hak akses yang tegas.
+- **Login Terisolasi**: Pengguna (karyawan/pemilik toko) login di pintu masuk (URL) yang spesifik untuk tenant mereka masing-masing.
 
-## Laravel Sponsors
+## 🛠️ Teknologi & Stack Pengembangan
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend Framework**: [Laravel 11](https://laravel.com/)
+- **Multi-Tenancy Engine**: [Stancl/Tenancy for Laravel](https://tenancyforlaravel.com/)
+- **Frontend / UI**: Laravel Blade, [Tailwind CSS](https://tailwindcss.com/) (atau Bootstrap), dan [Alpine.js](https://alpinejs.dev/)
+- **Database**: Relational Database Management System (MySQL / MariaDB / PostgreSQL)
+- **Routing**: Pendekatan Domain-based routing untuk membedakan arus pengguna secara otomatis.
 
-### Premium Partners
+## 📂 Struktur Arsitektur & Routing
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Aplikasi ini memisahkan alur logika dengan sangat rapi:
 
-## Contributing
+- `routes/web.php`: Menangani rute aplikasi sentral. Mengatur pendaftaran tenant baru, landing page publik, dan operasi pusat.
+- `routes/tenant.php`: Dieksekusi secara eksklusif dalam konteks tenant. Segala aktivitas POS, manajemen produk, kasir, dan transaksi ada di sini dan langsung berinteraksi dengan database/schema dari tenant yang aktif saat itu.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 💻 Panduan Instalasi (Development)
 
-## Code of Conduct
+Berikut adalah panduan teknis langkah demi langkah untuk melakukan *setup* aplikasi di environment lokal Anda.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Prasyarat
+Pastikan sistem Anda memenuhi spesifikasi berikut:
+- PHP >= 8.2
+- Composer 2.x
+- Node.js (LTS version) & NPM
+- Git
+- MySQL / MariaDB (Disarankan)
 
-## Security Vulnerabilities
+### Langkah Instalasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. **Clone Repositori**
+   ```bash
+   git clone https://github.com/esprydi/pos-inventory-multitenant.git
+   cd pos-inventory-multitenant/pos-saas
+   ```
 
-## License
+2. **Instal Dependensi Backend & Frontend**
+   ```bash
+   composer install
+   npm install
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. **Konfigurasi Environment Variables**
+   Salin file konfigurasi bawaan dan atur parameter database.
+   ```bash
+   cp .env.example .env
+   ```
+   **PENTING**: Sesuaikan blok database di `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=nama_database_central_anda
+   DB_USERNAME=root
+   DB_PASSWORD=
+   
+   # Konfigurasi Domain Utama (Central Domain)
+   CENTRAL_DOMAINS=localhost
+   ```
+
+4. **Generate Application Key**
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Jalankan Migrasi Database Pusat**
+   Perintah ini akan menjalankan migrasi untuk tabel *central* (seperti tabel `tenants` dan `domains`).
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+6. **Kompilasi Aset Frontend**
+   Bangun file CSS dan JS menggunakan Vite.
+   ```bash
+   npm run build
+   # Atau gunakan `npm run dev` jika ingin mengaktifkan hot-reloading.
+   ```
+
+7. **Konfigurasi Domain / Hosts (Opsional untuk Testing Subdomain)**
+   Agar simulasi subdomain berjalan mulus di lokal, Anda disarankan menggunakan domain statis lokal (contoh: `pos-saas.test`).
+   Tambahkan baris berikut di file `hosts` OS Anda (Misal di Windows: `C:\Windows\System32\drivers\etc\hosts`):
+   ```text
+   127.0.0.1 pos-saas.test
+   127.0.0.1 toko-a.pos-saas.test
+   127.0.0.1 toko-b.pos-saas.test
+   ```
+   *Jika mengubah host, ubah `APP_URL` di `.env` menjadi `http://pos-saas.test` dan `CENTRAL_DOMAINS=pos-saas.test`.*
+
+8. **Jalankan Aplikasi Lokal**
+   ```bash
+   php artisan serve
+   ```
+   Jika menggunakan domain kustom dari langkah 7:
+   ```bash
+   php artisan serve --host=pos-saas.test --port=8000
+   ```
+
+## 👥 Penggunaan Dasar: Membuat Tenant Pertama
+
+Untuk melihat kehebatan Multi-Tenancy secara langsung, Anda perlu mendaftarkan sebuah tenant (toko) terlebih dahulu:
+
+1. Buka terminal baru dan jalankan Laravel Tinker:
+   ```bash
+   php artisan tinker
+   ```
+2. Eksekusi kode pembentukan tenant berikut:
+   ```php
+   // Membuat tenant baru
+   $tenant1 = App\Models\Tenant::create(['id' => 'toko-a']);
+   
+   // Mendaftarkan domain/subdomain untuk tenant tersebut
+   $tenant1->domains()->create(['domain' => 'toko-a.localhost']); 
+   // Gunakan 'toko-a.pos-saas.test' jika mengikuti langkah 7 di atas
+   ```
+3. Keluar dari tinker, lalu buka browser dan akses `http://toko-a.localhost:8000` (sesuaikan port jika berbeda). Anda akan melihat aplikasi memuat dalam konteks tenant 'toko-a'.
+
+## 📄 Lisensi
+
+Proyek aplikasi perangkat lunak ini didistribusikan secara *Open Source* di bawah pelindungan [Lisensi MIT](https://opensource.org/licenses/MIT).
