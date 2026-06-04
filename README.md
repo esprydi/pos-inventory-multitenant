@@ -6,6 +6,17 @@ Sistem Point of Sale (POS) dan Manajemen Inventaris berskala Enterprise yang dib
 
 Aplikasi ini diciptakan untuk memecahkan masalah pencatatan inventaris dan penjualan yang masih manual pada bisnis ritel dan pertokoan. Dengan pendekatan multi-tenant, penyedia layanan (Super Admin) dapat menyewakan aplikasi ini kepada banyak pemilik toko (Tenant). Setiap Tenant akan memiliki ruang kerja, data, dan konfigurasi yang terisolasi sepenuhnya.
 
+## 📸 Screenshot Tampilan Aplikasi
+
+### Halaman Dashboard
+![Dashboard](public/screenshort-project/dashboard-page.png)
+
+### Halaman Kategori
+![Kategori](public/screenshort-project/category-page.png)
+
+### Halaman Produk
+![Produk](public/screenshort-project/product-page.png)
+
 ## ✨ Fitur Unggulan
 
 ### 1. Arsitektur Multi-Tenant yang Aman
